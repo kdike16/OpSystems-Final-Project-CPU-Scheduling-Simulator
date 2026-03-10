@@ -42,6 +42,9 @@ class Process:
     def __repr__(self):
         return (f"Process(pid={self.pid}, state={self.state.value}, "
                 f"arrival={self.arrival_time}, remaining={self.remaining_time})")
+    
+    def __str__(self):
+        return f"P{self.pid}"
 
 
 # Example test (can be removed later)
