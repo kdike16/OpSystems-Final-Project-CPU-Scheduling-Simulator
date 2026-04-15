@@ -31,7 +31,26 @@ class Scheduler:
             # NEW: record first time process runs
             if self.running.start_time is None:
                 self.running.start_time = self.clock
-    
+
+    #SJF Scheduling 
+    def scheduleShortestJob(self):
+        if self.running is None and not self.ready_queue.isEmpty():
+
+            # Finds job with shortest burst time
+            shortest_job = min(self.ready_queue.queue, key=lambda p: p.burst_time)
+
+            # Remove that job from the queue
+            self.ready_queue.queue.remove(shortest_job)
+
+            # Set it as the running process
+            self.running = shortest_job
+            self.running.state = ProcessState.RUNNING
+
+            # Record first time the process runs
+            if self.running.start_time is None:
+                self.running.start_time = self.clock
+            
+                
     def runProcess(self):
         if self.running is not None:
 
