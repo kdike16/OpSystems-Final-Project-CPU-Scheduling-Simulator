@@ -23,7 +23,7 @@ class Scheduler:
                 self.ready_queue.enqueue(proc)
 
     # FCFS scheduling
-    def scheduleNext(self):
+    def schedule_Next(self):
         if self.running is None and not self.ready_queue.isEmpty():
             self.running = self.ready_queue.dequeue()
             self.running.state = ProcessState.RUNNING
@@ -32,8 +32,8 @@ class Scheduler:
             if self.running.start_time is None:
                 self.running.start_time = self.clock
 
-    #SJF Scheduling 
-    def scheduleShortestJob(self):
+    # NEW: SJF Scheduling 
+    def schedule_Shortest_Job(self):
         if self.running is None and not self.ready_queue.isEmpty():
 
             # Finds job with shortest burst time
@@ -50,7 +50,45 @@ class Scheduler:
             if self.running.start_time is None:
                 self.running.start_time = self.clock
             
-                
+    
+
+    # NEW: SRTF Scheduling 
+    def schedule_Shortest_Remaining_Time(self):
+
+        if self.ready_queue.isEmpty():
+            return
+    
+        # Finds job with shortest remaining time
+        shortest_remaining_time = min(self.ready_queue.queue, key=lambda p: p.remaining_time)
+
+        # CASE 1: IF NO CURRENT RUNNING PROCESS
+        if self.running is None:
+            # Remove that job from the queue
+            self.ready_queue.queue.remove(shortest_remaining_time)
+
+            # Set it as the running process
+            self.running = shortest_remaining_time
+            self.running.state = ProcessState.RUNNING
+
+            # Record first time the process runs
+            if self.running.start_time is None:
+                self.running.start_time = self.clock
+
+        # CASE 2: Preemption Check
+        elif shortest_remaining_time.remaining_time < self.running.remaining_time:
+            # Put current running job back into ready_queue
+            self.running.state = ProcessState.READY
+            self.ready_queue.enqueue(self.running)
+
+            # Switches to the new shortest job
+            self.ready_queue.queue.remove(shortest_remaining_time)
+            self.running = shortest_remaining_time
+            self.running.state = ProcessState.RUNNING
+
+            if self.running.start_time is None:
+                self.running.start_time = self.clock
+
+
     def runProcess(self):
         if self.running is not None:
 
@@ -98,7 +136,9 @@ class Scheduler:
     def run(self):
         while True:
             self.checkArrivals()
-            self.scheduleNext()
+            #self.schedule_Next()
+            #self.schedule_Shortest_Job()
+            self.schedule_Shortest_Remaining_Time()
             self.runProcess()
 
             self.clock += 1
