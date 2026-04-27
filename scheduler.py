@@ -150,21 +150,14 @@ class Scheduler:
         print("\nCompletion Order:")
         print(" -> ".join(f"P{pid}" for pid in self.completion_order))
 
-    def run(self):
-        USE_RR = False  # change to True to test Round Robin
-
+    def run(self, scheduling_function, quantum=None):
         while True:
             self.checkArrivals()
 
-            if USE_RR:
-                self.schedule_Round_Robin(quantum=2)
+            if scheduling_function == self.schedule_Round_Robin:
+                 scheduling_function(quantum)
             else:
-                # Uncomment whichever you want to test:
-                # self.schedule_Next()
-                # self.schedule_Shortest_Job()
-                # self.schedule_Shortest_Remaining_Time()
-                # self.schedule_Priority_NonPreemptive()
-                self.schedule_Priority_Preemptive()
+                scheduling_function()
                 self.runProcess()
 
             self.clock += 1
