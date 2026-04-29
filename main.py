@@ -4,6 +4,7 @@ from process import Process
 def main():
 
     while True:
+        # Menu
         print("\nSelect Scheduling Algorithm:")
         print("F  - FCFS")
         print("S  - SJF")

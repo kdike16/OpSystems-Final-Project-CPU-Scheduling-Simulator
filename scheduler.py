@@ -150,6 +150,8 @@ class Scheduler:
         print("\nCompletion Order:")
         print(" -> ".join(f"P{pid}" for pid in self.completion_order))
 
+
+    # Main function running the Simulation 
     def run(self, scheduling_function, quantum=None):
         while True:
             self.checkArrivals()
