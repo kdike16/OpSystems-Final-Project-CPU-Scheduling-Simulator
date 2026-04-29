@@ -186,7 +186,6 @@ class Scheduler:
                 break
 
         self.print_statistics()
-        self.print_statistics()
         self.print_final_metrics()
 
     def print_final_metrics(self):
